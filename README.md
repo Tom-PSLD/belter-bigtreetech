@@ -7,10 +7,10 @@
 **Mesurer la tension d'une courroie GT2 en newtons avec un tensiomètre BigTreeTech Belter :
 ressort étalonné, modèle physique validé à ±6 %, calculateur en ligne et rapports techniques complets.**
 
-[**Site du projet**](https://USERNAME.github.io/belter-bigtreetech/) ·
-[**Calculateur**](https://USERNAME.github.io/belter-bigtreetech/outil/) ·
-[Rapport ressort](https://USERNAME.github.io/belter-bigtreetech/rapports/ressort.html) ·
-[Rapport courroies](https://USERNAME.github.io/belter-bigtreetech/rapports/courroies.html)
+[**Site du projet**](https://tom-psld.github.io/belter-bigtreetech/) ·
+[**Calculateur**](https://tom-psld.github.io/belter-bigtreetech/outil/) ·
+[Rapport ressort](https://tom-psld.github.io/belter-bigtreetech/rapports/ressort.html) ·
+[Rapport courroies](https://tom-psld.github.io/belter-bigtreetech/rapports/courroies.html)
 
 ![Code: MIT](https://img.shields.io/badge/code-MIT-1F5FAF?style=flat-square)
 ![Docs: CC BY 4.0](https://img.shields.io/badge/docs-CC%20BY%204.0-D9650B?style=flat-square)

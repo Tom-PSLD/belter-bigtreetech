@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Belter : tension de courroie</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#FBFCFD; --ink:#14202E; --soft:#55616F; --rule:#D5DBE1; --field:#FFFFFF;
+  --accent:#E8740C; --scale:#EEF1F4; --band:#CFE3D6; --good:#2F7A4B; --warn:#A45F00; --bad:#B0302A;
+  --font:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#171B20; --ink:#E4E8EC; --soft:#98A3AF; --rule:#333B44; --field:#1F252C;
+    --accent:#FF9A3D; --scale:#232A31; --band:#284536; --good:#7ACB98; --warn:#F0B04E; --bad:#FF8C84;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#171B20; --ink:#E4E8EC; --soft:#98A3AF; --rule:#333B44; --field:#1F252C;
+  --accent:#FF9A3D; --scale:#232A31; --band:#284536; --good:#7ACB98; --warn:#F0B04E; --bad:#FF8C84;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;font-variant-numeric:tabular-nums}
+.wrap{max-width:680px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:1.35rem;font-weight:650;margin:0}
+.intro{color:var(--soft);margin:4px 0 28px;max-width:60ch}
+
+/* mesure */
+.bench{display:grid;grid-template-columns:auto 1fr;gap:8px 32px;align-items:end}
+.cap{font-size:.9rem;color:var(--soft)}
+.readin{display:flex;align-items:baseline;gap:6px;border-bottom:2px solid var(--accent);padding-bottom:2px}
+.readin input{font:600 3rem/1 var(--font);font-stretch:75%;width:4.2ch;border:0;background:transparent;color:var(--ink);padding:0}
+.readin input:focus{outline:none}
+.readin:focus-within{box-shadow:0 2px 0 0 var(--accent)}
+.readin span{font-size:1.1rem;color:var(--soft)}
+.nudge{display:flex;gap:6px;margin-top:8px}
+.nudge button{font:500 .9rem var(--font);border:1px solid var(--rule);background:var(--field);color:var(--ink);border-radius:3px;padding:3px 10px;cursor:pointer}
+.tension{font-weight:700;font-size:3.6rem;line-height:1;font-stretch:75%}
+.tension small{font-size:1.2rem;font-weight:500;color:var(--soft);margin-left:6px;font-stretch:100%}
+.conv{color:var(--soft);font-size:.95rem}
+
+/* jauge */
+.gauge{margin:26px 0 6px}
+.gauge svg{display:block;width:100%;height:auto;overflow:visible}
+.gauge text{font:12px var(--font);fill:var(--soft)}
+.msg{font-size:.95rem;margin:10px 0 0;display:flex;gap:8px;align-items:baseline}
+.msg::before{content:'';width:9px;height:9px;border-radius:50%;background:currentColor;flex:none;transform:translateY(-1px)}
+.msg.good{color:var(--good)}.msg.warn{color:var(--warn)}.msg.bad{color:var(--bad)}
+.msg span{color:var(--ink)}
+
+.derived{display:grid;grid-template-columns:repeat(4,1fr);margin:22px 0 0;border-top:1px solid var(--rule)}
+.derived div{padding:10px 10px 0 0}
+.derived dt{font-size:.82rem;color:var(--soft)}
+.derived dd{margin:0;font-weight:600;font-size:1.15rem}
+
+/* réglages */
+details{border-top:1px solid var(--rule);margin-top:26px}
+summary{cursor:pointer;list-style:none;padding:14px 0 4px;display:flex;align-items:baseline;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary h2{font-size:1.05rem;font-weight:650;margin:0}
+summary .sum{color:var(--soft);font-size:.9rem;margin-left:auto;text-align:right}
+summary::before{content:'';width:0;height:0;border-left:6px solid var(--soft);border-top:5px solid transparent;border-bottom:5px solid transparent;transition:transform .15s;transform:translateY(-1px)}
+details[open] summary::before{transform:translateY(-1px) rotate(90deg)}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.rows{padding:6px 0 4px}
+.row{display:grid;grid-template-columns:1fr 230px;gap:4px 16px;align-items:center;padding:7px 0}
+.row+.row{border-top:1px dashed var(--rule)}
+.row label{display:flex;align-items:center;gap:6px}
+.q{border:0;background:none;color:var(--soft);font:600 .8rem var(--font);width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--rule);cursor:pointer;padding:0;flex:none}
+.q[aria-expanded="true"]{color:var(--bg);background:var(--soft);box-shadow:none}
+.q:focus-visible,.nudge button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.help{grid-column:1/-1;display:none;margin:2px 0 4px;font-size:.9rem;color:var(--soft);max-width:62ch}
+.help.show{display:block}
+.inp{display:flex;align-items:center;border:1px solid var(--rule);border-radius:3px;background:var(--field)}
+.inp:focus-within{border-color:var(--accent)}
+.inp input,.inp select{font:500 1rem var(--font);border:0;background:transparent;color:var(--ink);padding:7px 9px;width:100%;min-width:0}
+.inp input:focus,.inp select:focus{outline:none}
+.inp em{font-style:normal;color:var(--soft);font-size:.88rem;padding-right:9px;white-space:nowrap}
+.inp select{appearance:auto}
+.note{color:var(--soft);font-size:.9rem;margin:6px 0 0}
+.target{display:grid;grid-template-columns:repeat(3,1fr);margin-top:10px;border-top:1px solid var(--rule)}
+.target div{padding:10px 10px 0 0}
+.target dt{font-size:.82rem;color:var(--soft)}
+.target dd{margin:0;font-weight:600;font-size:1.1rem}
+.side{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-top:6px}
+.side label{display:block;margin-bottom:4px}
+.verdict{margin:12px 0 0}
+.action{margin:14px 0 0;padding:10px 14px;border-left:4px solid var(--accent);background:var(--field);font-weight:600;font-size:1.05rem}
+.action small{display:block;font-weight:400;color:var(--soft);font-size:.88rem;margin-top:2px}
+.check{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.check input{width:18px;height:18px;accent-color:var(--accent)}
+.calib{grid-column:1/-1;display:none;gap:10px;grid-template-columns:1fr 1fr auto;align-items:end;margin:4px 0 6px}
+.calib.show{display:grid}
+.calib label{font-size:.88rem;color:var(--soft)}
+.btn{font:500 .92rem var(--font);border:1px solid var(--rule);background:var(--field);color:var(--ink);border-radius:3px;padding:7px 12px;cursor:pointer}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.linkbtn{border:0;background:none;color:var(--soft);text-decoration:underline;font:inherit;font-size:.9rem;cursor:pointer;padding:0}
+.acts{margin:10px 0 0;padding-left:0;list-style:none}
+.acts li{padding:6px 0;border-top:1px dashed var(--rule);font-weight:600}
+.acts li small{display:block;font-weight:400;color:var(--soft)}
+.chart svg{display:block;width:100%;height:auto}
+.chart text{font:11px var(--font);fill:var(--soft)}
+.eq{margin:8px 0;padding-left:12px;border-left:2px solid var(--rule)}
+.back{margin:0 0 14px;font-size:.88rem;color:var(--soft)}.back a,footer a{color:var(--soft)}
+footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid var(--rule);padding-top:10px}
+@media (max-width:560px){
+  .bench{grid-template-columns:1fr}
+  .derived{grid-template-columns:1fr 1fr}
+  .row{grid-template-columns:1fr}
+  .target{grid-template-columns:1fr 1fr}
+  .calib{grid-template-columns:1fr}
+  .side{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){summary::before{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="back"><a href="../">← Belter BigTreeTech</a> · <a href="../rapports/ressort.html">rapport ressort</a> · <a href="../rapports/courroies.html">rapport courroies</a></p>
+  <h1>Tension de courroie au Belter</h1>
+  <p class="intro">Lecture du Belter en entrée, tension de la courroie en sortie. Les réglages en dessous sont déjà remplis avec l'étalonnage de ton appareil, embout imprimé en place sur la tige.</p>
+
+  <div class="bench">
+    <div>
+      <div class="cap"><label for="A">Lecture du Belter</label></div>
+      <div class="readin"><input id="A" type="number" inputmode="decimal" step="0.01" value="6.00"><span>mm</span></div>
+      <div class="nudge"><button type="button" id="dn" aria-label="Moins 0,01 mm">−0,01</button><button type="button" id="up" aria-label="Plus 0,01 mm">+0,01</button></div>
+    </div>
+    <div aria-live="polite">
+      <div class="cap">Tension</div>
+      <div class="tension" id="T">–<small>N</small></div>
+      <div class="conv" id="Talt">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="gauge"><svg id="gauge" viewBox="0 0 640 64" role="img" aria-label="Position de la tension sur l'échelle"></svg></div>
+  <p class="msg good" id="status"><span></span></p>
+  <p class="action" id="action" aria-live="polite"></p>
+
+  <dl class="derived">
+    <div><dt>Flèche de la courroie</dt><dd id="fdelta">–</dd></div>
+    <div><dt>Force de la tige</dt><dd id="fF">–</dd></div>
+    <div><dt>Fréquence du brin</dt><dd id="ff">–</dd></div>
+    <div><dt>Pour 0,01 mm lu</dt><dd id="fsens">–</dd></div>
+  </dl>
+
+  <details open>
+    <summary><h2>Courroie</h2><span class="sum" id="sumBelt"></span></summary>
+    <div class="rows">
+      <div class="row"><label for="belt">Type <button class="q" type="button" aria-expanded="false" aria-controls="hBelt" aria-label="Explication : type">?</button></label>
+        <div class="inp"><select id="belt">
+          <option value="gt2_9">GT2 9 mm</option><option value="gt2_6">GT2 6 mm</option><option value="gt2_10">GT2 10 mm</option><option value="gt2_12">GT2 12 mm</option><option value="custom">Autre</option>
+        </select></div>
+        <p class="help" id="hBelt">Seule la GT2 9 mm a été vérifiée avec des masses suspendues. Pour les autres, les valeurs sont typiques : mesure l'épaisseur et contrôle avec deux masses.</p></div>
+      <div class="row"><label for="e">Épaisseur <button class="q" type="button" aria-expanded="false" aria-controls="he" aria-label="Explication : épaisseur">?</button></label>
+        <div class="inp"><input id="e" type="number" step="0.01"><em>mm</em></div>
+        <p class="help" id="he">Épaisseur totale, dents comprises, au pied à coulisse. L'embout repose sur le sommet des dents : c'est cette épaisseur qui place la courroie droite par rapport à lui.</p></div>
+      <div class="row"><label for="c">Correction d'ajustement <button class="q" type="button" aria-expanded="false" aria-controls="hc" aria-label="Explication : correction d'ajustement">?</button></label>
+        <div class="inp"><input id="c" type="number" step="0.01"><em>mm</em></div>
+        <p class="help" id="hc">Décalage à appliquer si le modèle s'écarte de tes contrôles avec des masses. Avec la lecture de référence prise sur la pièce de calibration, il vaut 0 : le modèle colle aux 6 masses sans correction.</p></div>
+      <div class="row"><label for="mu">Masse linéique <button class="q" type="button" aria-expanded="false" aria-controls="hmu" aria-label="Explication : masse linéique">?</button></label>
+        <div class="inp"><input id="mu" type="number" step="0.0001"><em>kg/m</em></div>
+        <p class="help" id="hmu">Masse d'un mètre de courroie, utilisée seulement pour la fréquence. Pèse au moins 1 m de courroie pour la vérifier.</p></div>
+      <p class="note" id="beltnote"></p>
+    </div>
+  </details>
+
+  <details>
+    <summary><h2>Belter</h2><span class="sum" id="sumBelter"></span></summary>
+    <div class="rows">
+      <div class="row"><label for="orient">Tenue de l'appareil <button class="q" type="button" aria-expanded="false" aria-controls="ho" aria-label="Explication : tenue">?</button></label>
+        <div class="inp"><select id="orient"><option value="0.406">Tige horizontale</option><option value="0.337">Tige vers le bas</option><option value="0.475">Tige vers le haut</option></select></div>
+        <p class="help" id="ho">La partie mobile pèse 7 g et aide ou freine le ressort selon la position. Sur un brin vertical, la tige est horizontale.</p></div>
+      <div class="row"><label for="k">Raideur du ressort <button class="q" type="button" aria-expanded="false" aria-controls="hk" aria-label="Explication : raideur">?</button></label>
+        <div class="inp"><input id="k" type="number" step="0.0001" value="0.1226"><em>N/mm</em></div>
+        <p class="help" id="hk">Force ajoutée par le ressort pour chaque mm lu. Étalonnée avec 24 masses.</p></div>
+      <div class="row"><label for="course">Lecture sur la ligne des vis <button class="q" type="button" aria-expanded="false" aria-controls="hcourse" aria-label="Explication : lecture sur la ligne des vis">?</button></label>
+        <div class="inp"><input id="course" type="number" step="0.01" value="5.84"><em>mm</em></div>
+        <p class="help" id="hcourse">Embout en place : zéro fait tige au repos, puis Belter posé sur la pièce de calibration BigTreeTech. Mesuré à 5,84 mm (une règle en pont donnait 5,94 mm, trop imprécis).</p></div>
+      <div class="row"><label for="L">Entraxe des vis <button class="q" type="button" aria-expanded="false" aria-controls="hL" aria-label="Explication : entraxe">?</button></label>
+        <div class="inp"><input id="L" type="number" step="0.01" value="59.75"><em>mm</em></div>
+        <p class="help" id="hL">Distance entre les centres des deux vis d'appui : (55,2 + 64,3) / 2.</p></div>
+    </div>
+  </details>
+
+  <details open>
+    <summary><h2>Réglage de la machine</h2><span class="sum" id="sumMach"></span></summary>
+    <div class="rows">
+      <div class="row"><label for="model">Machine <button class="q" type="button" aria-expanded="false" aria-controls="hmodel" aria-label="Explication : machine">?</button></label>
+        <div class="inp"><select id="model"><option value="single">V-Core 4.1 single</option><option value="idex">V-Core 4.1 IDEX</option></select></div>
+        <p class="help" id="hmodel">Les fréquences visées sont les mêmes pour les deux versions (87 Hz CoreXY, 84 Hz hybride). Seules changent la position de mesure et donc la longueur des brins.</p></div>
+      <div class="row"><label for="size">Taille <button class="q" type="button" aria-expanded="false" aria-controls="hsize" aria-label="Explication : taille">?</button></label>
+        <div class="inp"><select id="size"><option value="300">300</option><option value="400">400</option><option value="500">500</option></select></div>
+        <p class="help" id="hsize">Pour la version single, les longueurs de brin viennent d'un calculateur de la communauté V-Core 4, en position home. Pour l'IDEX, Rat Rig ne les publie pas : mesure-les une fois par taille, elles restent enregistrées. Toute longueur modifiée est mémorisée pour ce modèle et cette taille.</p></div>
+      <p class="note" id="posnote" style="margin:4px 0 6px"></p>
+      <div class="row"><label for="hyb">Système hybride <button class="q" type="button" aria-expanded="false" aria-controls="hhyb" aria-label="Explication : système hybride">?</button></label>
+        <div class="check"><input id="hyb" type="checkbox" checked><span>moteurs Y supplémentaires</span></div>
+        <p class="help" id="hhyb">Coche si la machine a les moteurs supplémentaires qui entraînent des courroies Y à gauche et à droite. Les courroies Y apparaissent alors dans les choix.</p></div>
+      <div class="row"><label for="which">Courroie mesurée</label>
+        <div class="inp"><select id="which"></select></div></div>
+      <div class="row"><label for="Ls">Brin de référence Rat Rig <button class="q" type="button" aria-expanded="false" aria-controls="hLs" aria-label="Explication : brin de référence">?</button></label>
+        <div class="inp"><input id="Ls" type="number" step="1" placeholder="à mesurer"><em>mm</em></div>
+        <p class="help" id="hLs">Longueur du brin sur lequel Rat Rig fixe sa fréquence cible : brin 4 (joint XY → tendeur avant) pour upper et lower, pince du chariot → tendeur avant pour les courroies Y. Elle sert à passer de la tension à la fréquence, donc au nombre de tours.</p></div>
+      <div class="row" id="rowSide"><label for="Lside">Brin long sur le côté <button class="q" type="button" aria-expanded="false" aria-controls="hSide" aria-label="Explication : brin long sur le côté">?</button></label>
+        <div class="inp"><input id="Lside" type="number" step="1" placeholder="à mesurer"><em>mm</em></div>
+        <p class="help" id="hSide">Brin de la courroie Y entre la poulie arrière et le tendeur avant, le long du profilé. Sa longueur ne dépend pas de la position du portique, et il a la même tension que le brin de référence, car les deux passent par la poulie du tendeur. C'est un bon endroit pour poser le Belter. Pincé, il sonne plus grave que le brin de référence : sa fréquence cible est indiquée plus bas.</p></div>
+      <div class="row"><label for="ft">Fréquence visée <button class="q" type="button" aria-expanded="false" aria-controls="hft" aria-label="Explication : fréquence visée">?</button></label>
+        <div class="inp"><input id="ft" type="number" step="1" value="87"><em>Hz</em></div>
+        <p class="help" id="hft">Rat Rig demande 87 Hz sur les courroies upper et lower (CoreXY) et 84 Hz sur les courroies Y (hybride), à ±1 Hz, gauche et droite identiques.</p></div>
+      <div class="row"><label for="qt">Effet d'un quart de tour <button class="q" type="button" aria-expanded="false" aria-controls="hqt" aria-label="Explication : quart de tour">?</button></label>
+        <div class="inp"><input id="qt" type="number" step="0.5" value="10"><em>Hz</em></div>
+        <p class="help" id="hqt">Rat Rig indique qu'un quart de tour de la vis du tendeur change la fréquence d'environ 10 Hz. Sens horaire pour tendre, antihoraire pour détendre, après avoir desserré la vis de blocage sur le côté du tendeur. C'est une règle approximative : pour plus de précision, mesure-le sur ta machine.</p>
+        <p class="note" style="grid-column:1/-1;margin:0"><button class="linkbtn" type="button" id="calOpen">Mesurer l'effet d'un quart de tour sur ma machine</button></p>
+        <div class="calib" id="calib">
+          <div><label for="cA1">Lecture avant</label><div class="inp"><input id="cA1" type="number" step="0.01"><em>mm</em></div></div>
+          <div><label for="cA2">Lecture après ¼ de tour serré</label><div class="inp"><input id="cA2" type="number" step="0.01"><em>mm</em></div></div>
+          <button class="btn" type="button" id="calUse">Utiliser</button>
+          <p class="note" id="calRes" style="grid-column:1/-1;margin:0"></p>
+        </div></div>
+      <dl class="target">
+        <div><dt>Tension visée</dt><dd id="Tt">–</dd></div>
+        <div><dt>Lecture à obtenir</dt><dd id="At">–</dd></div>
+        <div><dt>Fréquence actuelle</dt><dd id="fnow">–</dd></div>
+        <div id="sideBox"><dt>Sur le brin de côté</dt><dd id="fside">–</dd></div>
+      </dl>
+    </div>
+  </details>
+
+  <details>
+    <summary><h2>Comparer deux courroies</h2><span class="sum">réglage des deux côtés</span></summary>
+    <div class="rows">
+      <div class="row"><label for="pair">Paire</label>
+        <div class="inp"><select id="pair"></select></div></div>
+    </div>
+    <div class="side">
+      <div><label for="AL" id="lblAL">Lecture</label><div class="inp"><input id="AL" type="number" step="0.01"><em>mm</em></div></div>
+      <div><label for="AR" id="lblAR">Lecture</label><div class="inp"><input id="AR" type="number" step="0.01"><em>mm</em></div></div>
+    </div>
+    <ul class="acts" id="cmpacts"></ul>
+    <p class="verdict" id="cmpres">Mesure les deux courroies sur leur brin 4, en miroir, tête au même endroit.</p>
+  </details>
+
+  <details>
+    <summary><h2>Courbe et formules</h2></summary>
+    <div class="chart"><svg id="chart" viewBox="0 0 640 300" role="img" aria-label="Tension en fonction de la lecture"></svg></div>
+    <p class="note">Trait : modèle. Point orange : ta lecture. Cercles : les six masses de contrôle (GT2 9 mm).</p>
+    <p class="eq">flèche δ = (lecture sur la ligne des vis + épaisseur − correction) − lecture</p>
+    <p class="eq">force de la tige F = F0 + raideur × lecture</p>
+    <p class="eq">tension T = F × entraxe / (4 × δ)</p>
+    <p class="eq">fréquence f = √(T / masse linéique) / (2 × longueur libre)</p>
+    <p class="note">Vérifié sur GT2 9 mm de 6 à 29 N avec 6 masses, écart maximal 6 %. Au-delà de 20 N la flèche passe sous 1 mm : fais plusieurs lectures.</p>
+  </details>
+
+  <footer>Étalonnage du ressort : 2 campagnes, 120 lectures. Contrôle sur courroie : 6 masses de 648 à 2916 g. Méthode détaillée dans le <a href="../rapports/ressort.html">rapport de caractérisation</a>.</footer>
+</div>
+
+<script>
+(function(){
+  var BELTS={
+    gt2_9:{e:1.40,c:0,mu:0.0126,note:'Vérifiée avec 6 masses de 648 à 2916 g (6 à 29 N).',ok:true},
+    gt2_6:{e:1.38,c:0,mu:0.0084,note:'Valeurs typiques, non vérifiées sur ton appareil.',ok:false},
+    gt2_10:{e:1.38,c:0,mu:0.0140,note:'Valeurs typiques, non vérifiées sur ton appareil.',ok:false},
+    gt2_12:{e:1.38,c:0,mu:0.0168,note:'Valeurs typiques, non vérifiées sur ton appareil.',ok:false},
+    custom:{e:1.40,c:0,mu:0.0126,note:'Valeurs saisies à la main, non vérifiées.',ok:false}
+  };
+  var VAL=[[4.97,6.357],[5.417,9.212],[6.19,17.56],[6.347,20.317],[6.527,25.359],[6.633,28.606]];var TLO=6,THI=29;
+  var TMAX=40;
+  var $=function(id){return document.getElementById(id)};
+  var ids=['A','belt','e','c','mu','orient','k','course','L','model','size','which','ft','qt','pair','AL','AR'];
+  var DEF={single:{'300':{cx:185,hy:195},'400':{cx:235,hy:245},'500':{cx:285,hy:295,side:620}},idex:{'300':{},'400':{},'500':{side:620}}};
+  var OVR={};try{OVR=JSON.parse(localStorage.getItem('belterSpans')||'{}')||{}}catch(e){OVR={}}
+  function spanKey(t){return $('model').value+'|'+$('size').value+'|'+t}
+  function spanFor(t){var k=spanKey(t);if(OVR[k]>0)return OVR[k];var d=DEF[$('model').value][$('size').value][t];return d>0?d:NaN}
+  function setSpan(t,v){var k=spanKey(t);if(v>0)OVR[k]=v;else delete OVR[k];try{localStorage.setItem('belterSpans',JSON.stringify(OVR))}catch(e){}}
+  var POS={single:'Position de mesure : tête en position home.',idex:'Position de mesure : home, puis portique à Y = 272 mm et mode IDEX COPY (procédure Rat Rig).'};
+  var BELTNAME={upper:'courroie upper',lower:'courroie lower',yl:'courroie Y gauche',yr:'courroie Y droite'};
+  var TYPE={upper:'cx',lower:'cx',yl:'hy',yr:'hy'};
+  var FT={cx:87,hy:84};
+  var f=function(x,d){return isFinite(x)?x.toFixed(d).replace('.',','):'–'};
+  var n=function(id){return parseFloat(String($(id).value).replace(',','.'))};
+  function P(){return {A:n('A'),e:n('e'),c:n('c'),mu:n('mu'),F0:n('orient'),k:n('k'),course:n('course'),L:n('L'),Ls:n('Ls'),ft:n('ft'),qt:n('qt'),belt:$('belt').value}}
+  function ten(A,q){var dmax=q.course+q.e-q.c,d=dmax-A,F=q.F0+q.k*A;return {T:F*q.L/(4*d),d:d,F:F,dmax:dmax}}
+  function readFor(T,q){var dmax=q.course+q.e-q.c;return (4*T*dmax-q.F0*q.L)/(4*T+q.k*q.L)}
+  function freq(T,q){return Math.sqrt(T/q.mu)/(2*q.Ls/1000)}
+  function target(q){return (q.ft>0&&q.Ls>0&&q.mu>0)?q.mu*Math.pow(2*q.Ls/1000*q.ft,2):NaN}
+
+  function frac(t){var a=Math.abs(t),w=Math.floor(a+1e-9),r=Math.round((a-w)*8);if(r===8){w++;r=0}
+    var F={1:'un huitième',2:'un quart',3:'trois huitièmes',4:'un demi',5:'cinq huitièmes',6:'trois quarts',7:'sept huitièmes'};
+    if(w===0&&r===0)return 'moins d\'un huitième de tour';
+    if(w===0)return r===4?'un demi-tour':F[r]+' de tour';
+    var base=(w===1?'un tour':w+' tours');
+    return r?base+' et '+(r===4?'demi':F[r]):base;}
+  // retourne {txt, sub, ok}
+  function advice(T,Ls,ft,qt,mu,name){
+    if(!(T>0)||!(Ls>0)||!(ft>0)||!(qt>0)||!(mu>0))return null;
+    var f0=Math.sqrt(T/mu)/(2*Ls/1000),df=ft-f0,turns=df/(4*qt);
+    if(Math.abs(df)<=1)return {ok:true,txt:name.charAt(0).toUpperCase()+name.slice(1)+' : réglée, ne touche pas au tendeur.',sub:'Fréquence estimée '+f(f0,0)+' Hz pour '+f(ft,0)+' Hz visés.'};
+    var tight=df>0,t=name.charAt(0).toUpperCase()+name.slice(1)+' : '+(tight?'serre':'desserre')+' la vis du tendeur, '+frac(turns)+' dans le sens '+(tight?'horaire':'antihoraire')+'.';
+    var sub='Fréquence estimée '+f(f0,0)+' Hz pour '+f(ft,0)+' Hz visés ('+(df>0?'+':'')+f(df,0)+' Hz, à raison de '+f(qt,1)+' Hz par quart de tour).';
+    if(Math.abs(turns)>2)sub+=' Fais-le en deux fois et remesure entre les deux.';
+    return {ok:false,txt:t,sub:sub};
+  }
+  function setAction(a){var el=$('action');if(!a){el.style.display='none';return}el.style.display='';el.innerHTML=a.txt+'<small>'+a.sub+'</small>';el.style.borderLeftColor=a.ok?'var(--good)':'var(--accent)'}
+  function sideInfo(T,q){var hy=TYPE[$('which').value]==='hy';$('rowSide').style.display=hy?'':'none';$('sideBox').style.display=hy?'':'none';
+    var Lsd=n('Lside');if(!hy||!(Lsd>0)||!(q.Ls>0)){$('fside').textContent='–';return}
+    var fc=T>0?Math.sqrt(T/q.mu)/(2*Lsd/1000):NaN,fg=q.ft*q.Ls/Lsd;
+    $('fside').textContent=(isFinite(fc)?f(fc,0)+' Hz, ':'')+'cible '+f(fg,0)+' Hz';}
+  function fillWhich(){var hy=$('hyb').checked,w=$('which'),cur=w.value,o='<option value="upper">Upper (CoreXY)</option><option value="lower">Lower (CoreXY)</option>';
+    if(hy)o+='<option value="yl">Y gauche (hybride)</option><option value="yr">Y droite (hybride)</option>';w.innerHTML=o;if(cur&&(hy||TYPE[cur]==='cx'))w.value=cur;
+    var pr=$('pair'),pc=pr.value,po='<option value="cx">Upper et lower</option>'+(hy?'<option value="hy">Y gauche et Y droite</option>':'');pr.innerHTML=po;if(pc&&(hy||pc==='cx'))pr.value=pc;}
+  function applyBelt(){var t=TYPE[$('which').value],L=spanFor(t),S=spanFor('side');$('Ls').value=isFinite(L)?L:'';$('Lside').value=isFinite(S)?S:'';$('ft').value=FT[t];$('posnote').textContent=POS[$('model').value]}
+  function setMsg(cls,t){var m=$('status');m.className='msg '+cls;m.firstElementChild.textContent=t}
+  function summaries(q){
+    $('sumBelt').textContent=$('belt').options[$('belt').selectedIndex].text+', '+f(q.e,2)+' mm';
+    $('sumBelter').textContent=$('orient').options[$('orient').selectedIndex].text.toLowerCase();
+    $('sumMach').textContent='V-Core 4.1 '+($('model').value==='idex'?'IDEX':'single')+' '+$('size').value+', '+BELTNAME[$('which').value];
+  }
+  function update(){
+    var q=P(),r=ten(q.A,q),Tt=target(q);summaries(q);
+    if(!isFinite(q.A)){setMsg('bad','Entre la lecture affichée par le Belter.');blank(q,Tt);return}
+    if(q.A<=0){setMsg('bad','Lecture à zéro : la courroie ne repousse pas la tige. Vérifie que le Belter est bien posé sur le brin.');blank(q,Tt);return}
+    if(r.d<=0.05){setMsg('bad','Lecture au niveau de la ligne des vis : la courroie est droite, la tension ne peut pas être calculée. Vérifie le zéro et l\'épaisseur.');blank(q,Tt);return}
+    var T=r.T;
+    $('T').innerHTML=f(T,1)+'<small>N</small>';
+    $('Talt').textContent=f(T/9.81,2)+' kgf, '+f(T/4.448,1)+' lbf';
+    $('fdelta').textContent=f(r.d,2)+' mm';
+    $('fF').textContent=f(r.F,2)+' N';
+    var fr=freq(T,q);$('ff').textContent=q.Ls>0&&q.mu>0?f(fr,0)+' Hz':'–';
+    var dT=Math.abs(ten(q.A+0.01,q).T-T);$('fsens').textContent='± '+f(dT,2)+' N';
+    var ok=BELTS[q.belt].ok;
+    if(q.A<1)setMsg('warn','Lecture sous 1 mm : en dehors de l\'étalonnage du ressort.');
+    else if(ok&&T>=TLO&&T<=THI)setMsg('good','Dans la zone vérifiée : précision d\'environ 6 %.'+(r.d<1?' Flèche sous 1 mm, fais plusieurs lectures.':''));
+    else if(ok)setMsg('warn','En dehors de la zone vérifiée (6 à 29 N) : valeur extrapolée.');
+    else setMsg('warn','Courroie non vérifiée : valeur estimée.');
+    if(isFinite(Tt)){var At=readFor(Tt,q);$('Tt').textContent=f(Tt,1)+' N';$('At').textContent=f(At,2)+' mm'}
+    else{$('Tt').textContent=$('At').textContent='–'}
+    $('fnow').textContent=q.Ls>0&&q.mu>0?f(freq(T,q),0)+' Hz':'–';
+    sideInfo(T,q);
+    setAction(q.Ls>0?advice(T,q.Ls,q.ft,q.qt,q.mu,BELTNAME[$('which').value]):{ok:false,txt:'Tension mesurée : '+f(T,1)+' N. Pour le conseil en tours de clé, saisis la longueur du brin de référence.',sub:'Rat Rig ne publie pas cette longueur pour ce modèle : mesure-la une fois dans la position indiquée, elle sera mémorisée.'});
+    gauge(T,Tt,ok);compare(q);chart(q);save();
+  }
+  function blank(q,Tt){sideInfo(NaN,q);$('T').innerHTML='–<small>N</small>';$('Talt').innerHTML='&nbsp;';['fdelta','fF','ff','fsens','fnow'].forEach(function(i){$(i).textContent='–'});setAction(null);
+    if(isFinite(Tt)){$('Tt').textContent=f(Tt,1)+' N';$('At').textContent=f(readFor(Tt,q),2)+' mm'}
+    gauge(NaN,Tt,BELTS[q.belt].ok);compare(q);chart(q);save()}
+  function gauge(T,Tt,ok){
+    var W=640,x=function(t){return 8+Math.max(0,Math.min(t,TMAX))/TMAX*(W-16)},h='';
+    h+='<rect x="8" y="18" width="'+(W-16)+'" height="14" fill="var(--scale)"/>';
+    if(ok)h+='<rect x="'+x(TLO)+'" y="18" width="'+(x(THI)-x(TLO))+'" height="14" fill="var(--band)"/><text x="'+x(TLO)+'" y="12">zone vérifiée</text>';
+    for(var t=0;t<=TMAX;t+=5){h+='<line x1="'+x(t)+'" x2="'+x(t)+'" y1="32" y2="'+(t%10?37:41)+'" stroke="var(--soft)"/>';if(t%10===0)h+='<text x="'+x(t)+'" y="56" text-anchor="middle">'+t+(t===TMAX?' N':'')+'</text>'}
+    if(isFinite(Tt))h+='<line x1="'+x(Tt)+'" x2="'+x(Tt)+'" y1="12" y2="38" stroke="var(--ink)" stroke-width="2"/><text x="'+x(Tt)+'" y="8" text-anchor="middle" style="fill:var(--ink)">cible</text>';
+    if(isFinite(T))h+='<path d="M'+x(T)+' 33 l-7 -18 h14 z" fill="var(--accent)"/>';
+    $('gauge').innerHTML=h;
+  }
+  function compare(q){
+    var pr=$('pair').value,names=pr==='cx'?['upper','lower']:['yl','yr'];
+    $('lblAL').textContent='Lecture '+(pr==='cx'?'upper':'Y gauche');$('lblAR').textContent='Lecture '+(pr==='cx'?'lower':'Y droite');
+    var Ls=spanFor(pr),ft=FT[pr];
+    var a=n('AL'),b=n('AR'),o=$('cmpres'),ul=$('cmpacts');ul.innerHTML='';
+    if(!(a>0)||!(b>0)){o.textContent='Mesure les deux courroies sur leur brin 4, en miroir, tête au même endroit.';o.style.color='';return}
+    var Ta=ten(a,q).T,Tb=ten(b,q).T;if(!(Ta>0)||!(Tb>0)){o.textContent='Une lecture dépasse la ligne des vis : vérifie le zéro.';o.style.color='var(--bad)';return}
+    var h='';if(!(Ls>0))h='<li>Tension '+(pr==='cx'?'upper':'Y gauche')+' '+f(Ta,1)+' N, '+(pr==='cx'?'lower':'Y droite')+' '+f(Tb,1)+' N.<small>Saisis la longueur du brin de référence de ces courroies (réglage de la machine) pour obtenir le conseil en tours.</small></li>';
+    else [[Ta,names[0]],[Tb,names[1]]].forEach(function(x){var ad=advice(x[0],Ls,ft,q.qt,q.mu,BELTNAME[x[1]]);if(ad)h+='<li style="color:'+(ad.ok?'var(--good)':'var(--ink)')+'">'+ad.txt+'<small>Tension '+f(x[0],1)+' N. '+ad.sub+'</small></li>'});
+    ul.innerHTML=h;
+    var dp=Math.abs(Ta-Tb)/((Ta+Tb)/2)*100;
+    o.textContent='Écart entre les deux : '+f(dp,1)+' % '+(dp<=5?'(équilibré).':'(à rééquilibrer).')+'';
+    o.style.color=dp<=5?'var(--good)':'var(--warn)';
+  }
+  function chart(q){
+    var s=$('chart'),W=640,H=300,m={l:44,r:12,t:10,b:36},dmax=q.course+q.e-q.c;if(!isFinite(dmax)){s.innerHTML='';return}
+    var x0=Math.max(0,dmax-4.5),x1=dmax-0.3,X=function(a){return m.l+(a-x0)/(x1-x0)*(W-m.l-m.r)},Y=function(t){return H-m.b-Math.min(Math.max(t,0),TMAX)/TMAX*(H-m.t-m.b)},h='';
+    for(var t=0;t<=TMAX;t+=10)h+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+Y(t)+'" y2="'+Y(t)+'" stroke="var(--rule)"/><text x="'+(m.l-8)+'" y="'+(Y(t)+4)+'" text-anchor="end">'+t+'</text>';
+    for(var a=Math.ceil(x0);a<=x1;a++)h+='<text x="'+X(a)+'" y="'+(H-m.b+16)+'" text-anchor="middle">'+a+'</text>';
+    h+='<text x="'+((W+m.l)/2)+'" y="'+(H-3)+'" text-anchor="middle">lecture (mm)</text><text x="'+m.l+'" y="'+(m.t+2)+'" dx="6">tension (N)</text>';
+    var d='';for(var i=0;i<=120;i++){var aa=x0+(x1-x0)*i/120,tt=ten(aa,q).T;if(tt>0&&tt<=TMAX*1.05)d+=(d?'L':'M')+X(aa).toFixed(1)+' '+Y(tt).toFixed(1)}
+    h+='<path d="'+d+'" fill="none" stroke="var(--ink)" stroke-width="2"/>';
+    if(q.belt==='gt2_9')VAL.forEach(function(v){h+='<circle cx="'+X(v[0])+'" cy="'+Y(v[1])+'" r="5" fill="var(--bg)" stroke="var(--ink)" stroke-width="1.5"/>'});
+    var r=ten(q.A,q);if(r.T>0&&q.A>=x0&&q.A<=x1&&r.T<=TMAX)h+='<circle cx="'+X(q.A)+'" cy="'+Y(r.T)+'" r="6" fill="var(--accent)"/>';
+    s.innerHTML=h;
+  }
+  function loadBelt(v){var b=BELTS[v];$('e').value=b.e.toFixed(2);$('c').value=b.c.toFixed(2);$('mu').value=b.mu.toFixed(4);$('beltnote').textContent=b.note}
+  function save(){try{var o={hyb:$('hyb').checked};ids.forEach(function(i){o[i]=$(i).value});localStorage.setItem('belterTension7',JSON.stringify(o))}catch(e){}}
+  function restore(){try{var o=JSON.parse(localStorage.getItem('belterTension7')||'null');if(!o)return false;if(o.hyb!=null)$('hyb').checked=o.hyb;fillWhich();ids.forEach(function(i){if(o[i]!=null)$(i).value=o[i]});$('beltnote').textContent=BELTS[$('belt').value].note;return true}catch(e){return false}}
+
+  document.querySelectorAll('.q').forEach(function(b){b.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();var h=$(b.getAttribute('aria-controls')),on=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',on);h.classList.toggle('show',on)})});
+  $('belt').addEventListener('change',function(){loadBelt(this.value);update()});
+  ['e','c','mu'].forEach(function(i){$(i).addEventListener('input',function(){if($('belt').value!=='custom'){$('belt').value='custom';$('beltnote').textContent=BELTS.custom.note}update()})});
+  $('size').addEventListener('change',function(){applyBelt();update()});
+  $('model').addEventListener('change',function(){applyBelt();update()});
+  $('which').addEventListener('change',function(){applyBelt();update()});
+  $('hyb').addEventListener('change',function(){fillWhich();applyBelt();update()});
+  $('pair').addEventListener('change',update);
+  $('Ls').addEventListener('input',function(){setSpan(TYPE[$('which').value],n('Ls'));update()});
+  $('Lside').addEventListener('input',function(){setSpan('side',n('Lside'));update()});
+  ['ft','qt'].forEach(function(i){$(i).addEventListener('input',update)});
+  $('calOpen').addEventListener('click',function(){$('calib').classList.add('show');$('cA1').focus()});
+  function calc(){var q=P(),a1=n('cA1'),a2=n('cA2'),r=$('calRes');if(!(a1>0)||!(a2>0)||!(q.Ls>0)){r.textContent='Entre les deux lectures, avant et après un quart de tour serré.';return NaN}
+    var f1=freq(ten(a1,q).T,q),f2=freq(ten(a2,q).T,q),d=f2-f1;if(!(d>0)){r.textContent='La seconde lecture doit être plus grande : la courroie a été tendue.';return NaN}
+    r.textContent='Fréquence passée de '+f(f1,0)+' à '+f(f2,0)+' Hz : '+f(d,1)+' Hz par quart de tour (brin de '+f(q.Ls,0)+' mm).';return d}
+  ['cA1','cA2'].forEach(function(i){$(i).addEventListener('input',calc)});
+  $('calUse').addEventListener('click',function(){var d=calc();if(d>0){$('qt').value=d.toFixed(1);update()}});
+  ['A','orient','k','course','L','AL','AR'].forEach(function(i){$(i).addEventListener('input',update);$(i).addEventListener('change',update)});
+  $('up').addEventListener('click',function(){$('A').value=(n('A')+0.01).toFixed(2);update()});
+  $('dn').addEventListener('click',function(){$('A').value=Math.max(0,n('A')-0.01).toFixed(2);update()});
+  fillWhich();if(!restore()){loadBelt('gt2_9');$('size').value='500'}applyBelt();
+  update();
+})();
+</script>
+</body>
+</html>

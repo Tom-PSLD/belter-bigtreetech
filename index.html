@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belter BigTreeTech · tension de courroie</title>
+<meta name="description" content="Tensiomètre de courroie BigTreeTech Belter étalonné : modèle physique validé à ±6 % par masses suspendues, calculateur en ligne et rapports techniques complets.">
+<meta property="og:title" content="Belter BigTreeTech · tension de courroie">
+<meta property="og:description" content="Mesurer la tension d'une courroie GT2 en newtons avec un Belter : modèle validé à ±6 %, calculateur en ligne, rapports techniques.">
+<meta property="og:image" content="figures/ressort/fig17.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/site.js"></script>
+<style>
+  section { padding: 76px 0 0; scroll-margin-top: 60px; }
+  .eyebrow { font: 600 .74rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 14px; }
+  h2.title { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 700; font-stretch: 88%; line-height: 1.15; margin: 0 0 14px; max-width: 28ch; text-wrap: balance; }
+  .lede { color: var(--ink-soft); font-size: 1.06rem; max-width: 64ch; margin: 0 0 28px; }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 44px; padding: 64px 0 20px; align-items: center; }
+  @media (min-width: 960px) { .hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 56px; padding-top: 84px; } }
+  .hero h1 { font-size: clamp(2.2rem, 5.6vw, 3.7rem); line-height: 1.02; font-weight: 800; font-stretch: 80%; letter-spacing: -.01em; margin: 0 0 20px; text-wrap: balance; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p.intro { font-size: 1.13rem; color: var(--ink-soft); max-width: 50ch; margin: 0 0 30px; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* live widget */
+  .live { background: var(--surface); border: 1px solid var(--rule); border-radius: 16px; box-shadow: var(--shadow); padding: 22px 22px 18px; }
+  .live-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .live-top span { font: 600 .7rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .live-top a { font-size: .85rem; }
+  .live svg { display: block; width: 100%; height: auto; margin: 6px 0 4px; }
+  .live-read { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
+  .live-read label { display: block; font-size: .85rem; color: var(--muted); }
+  .live-read output, .live-read .val { display: block; font-weight: 800; font-stretch: 75%; font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .live-read .val small, .live-read output small { font-size: 1rem; font-weight: 500; color: var(--muted); font-stretch: 100%; margin-left: 4px; }
+  .live-read .t { color: var(--accent); text-align: right; }
+  .live-read .sub { display: block; font-size: .82rem; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .live input[type=range] { width: 100%; accent-color: var(--accent); margin: 14px 0 4px; }
+  .live .note { font-size: .8rem; color: var(--muted); margin: 6px 0 0; }
+
+  /* stats */
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; margin-top: 56px; }
+  @media (min-width: 820px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .stats div { background: var(--surface); padding: 20px 20px 18px; }
+  .stats b { display: block; font-size: 2rem; font-weight: 800; font-stretch: 78%; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .stats span { display: block; color: var(--muted); font-size: .88rem; margin-top: 6px; line-height: 1.4; }
+  .stats .hl b { color: var(--accent); }
+
+  /* model */
+  .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; align-items: start; }
+  @media (min-width: 960px) { .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 52px; } }
+  .formula { font-family: var(--mono); background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 10px; padding: 18px 20px; font-size: clamp(.86rem, 1.9vw, 1.02rem); line-height: 1.6; overflow-x: auto; box-shadow: var(--shadow); }
+  .formula .big { font-size: 1.12em; font-weight: 600; white-space: nowrap; }
+  .formula .muted { color: var(--muted); font-size: .86em; }
+  .steps { list-style: none; counter-reset: s; padding: 0; margin: 26px 0 0; display: flex; flex-direction: column; gap: 16px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 36px 1fr; gap: 14px; }
+  .steps li::before { content: counter(s); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-ink); font-weight: 700; font-family: var(--mono); }
+  .steps b { display: block; margin-bottom: 2px; }
+  .steps span { color: var(--ink-soft); font-size: .95rem; }
+  .fig { margin: 0; }
+  .fig a { display: block; background: #fff; border: 1px solid var(--rule); border-radius: 12px; padding: 10px; box-shadow: var(--shadow); }
+  .fig figcaption { font-size: .85rem; color: var(--muted); margin-top: 10px; }
+  .fig + .fig { margin-top: 22px; }
+
+  /* validation table */
+  .table-wrap { margin: 0; }
+  .delta-good { color: var(--good); font-weight: 600; }
+  .delta-bad { color: #B0302A; font-weight: 600; }
+  :root[data-theme="dark"] .delta-bad { color: #FF8C84; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .delta-bad { color: #FF8C84; } }
+
+  /* tool features */
+  .tool-card { display: grid; grid-template-columns: minmax(0, 1fr); gap: 30px; background: var(--ink); color: #EEF1F4; border-radius: 18px; padding: clamp(24px, 4vw, 44px); overflow: hidden; position: relative; }
+  :root[data-theme="dark"] .tool-card { background: var(--surface-2); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tool-card { background: var(--surface-2); } }
+  @media (min-width: 900px) { .tool-card { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 44px; align-items: center; } }
+  .tool-card .eyebrow { color: #FFB27A; }
+  .tool-card h2.title { color: #fff; }
+  .tool-card p { color: #C6CDD5; margin: 0 0 24px; }
+  .feat { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  @media (min-width: 560px) { .feat { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .feat li { background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .1); border-radius: 10px; padding: 14px 16px; font-size: .92rem; color: #C6CDD5; }
+  .feat b { display: block; color: #fff; margin-bottom: 3px; font-size: .98rem; }
+
+  /* compare */
+  .vs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-bottom: 30px; }
+  @media (min-width: 760px) { .vs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .vs div { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .vs h3 { margin: 0 0 4px; font-size: 1.15rem; }
+  .vs .q { color: var(--accent-ink); font-style: italic; margin: 0 0 12px; font-family: var(--serif); font-size: 1.02rem; }
+  .vs ul { margin: 0; padding-left: 1.1rem; color: var(--ink-soft); font-size: .93rem; }
+  .vs li { margin: .3rem 0; }
+  .figrow { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  @media (min-width: 760px) { .figrow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .figrow .fig + .fig { margin-top: 0; }
+
+  /* docs */
+  .docs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  @media (min-width: 820px) { .docs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .doc { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; text-decoration: none; color: var(--ink); box-shadow: var(--shadow); transition: border-color .15s, transform .15s; }
+  .doc:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-2px); }
+  .doc .thumb { background: #fff; border-bottom: 1px solid var(--rule); aspect-ratio: 16 / 7; overflow: hidden; }
+  .doc .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+  .doc .body { padding: 18px 20px 20px; }
+  .doc small { font: 600 .68rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); }
+  .doc h3 { margin: 6px 0 6px; font-size: 1.2rem; line-height: 1.25; }
+  .doc p { margin: 0; color: var(--ink-soft); font-size: .93rem; }
+  .doc .meta { margin-top: 12px; color: var(--muted); font-size: .82rem; }
+  .files { list-style: none; margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  @media (min-width: 820px) { .files { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .files a { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); text-decoration: none; color: var(--ink); font-size: .9rem; line-height: 1.3; }
+  .files a:hover { border-color: var(--accent); color: var(--ink); }
+  .files .ext { flex: none; font: 700 .68rem var(--mono); padding: 6px 7px; border-radius: 6px; background: var(--blue-soft); color: var(--blue); }
+  .files .ext.x { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+  .files span small { display: block; color: var(--muted); font-size: .78rem; }
+
+  /* next */
+  .todo { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  @media (min-width: 820px) { .todo { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .todo li { display: flex; gap: 12px; padding: 13px 15px; border: 1px dashed var(--rule); border-radius: 10px; font-size: .93rem; color: var(--ink-soft); }
+  .todo li::before { content: "○"; color: var(--accent); font-family: var(--mono); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><svg width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><line x1="1" y1="5" x2="15" y2="15" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><line x1="15" y1="15" x2="29" y2="5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="4" cy="8" r="2.6" fill="var(--accent)"/><circle cx="26" cy="8" r="2.6" fill="var(--accent)"/><line x1="15" y1="1" x2="15" y2="13" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round"/></svg><span>Belter BigTreeTech</span></a>
+    <nav aria-label="Navigation principale">
+      <a href="outil/">Calculateur</a>
+      <a href="rapports/ressort.html">Ressort</a>
+      <a href="rapports/courroies.html">Courroies</a>
+      <a href="#telechargements">Fichiers</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Changer de thème">☾</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Tensiomètre de courroie · étalonné et validé</p>
+      <h1>La tension de tes courroies, <em>en newtons</em>, avec un Belter.</h1>
+      <p class="intro">Le Belter de BigTreeTech affiche un enfoncement en millimètres. Ce projet le transforme en instrument de mesure : ressort étalonné sur 120 lectures, géométrie mesurée, modèle physique vérifié par masses suspendues. Résultat : la tension d'une courroie GT2 à ±6 %, et le nombre de tours à donner au tendeur.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="outil/">Ouvrir le calculateur →</a>
+        <a class="btn btn-ghost" href="#modele">Voir la méthode</a>
+      </div>
+    </div>
+
+    <div class="live" aria-label="Essai du modèle">
+      <div class="live-top"><span>Essai en direct · GT2 9 mm</span><a href="outil/">calculateur complet →</a></div>
+      <svg id="curve" viewBox="0 0 400 190" role="img" aria-label="Tension en fonction de la lecture du Belter"></svg>
+      <div class="live-read">
+        <div><label for="A">Lecture du Belter</label><span class="val"><span id="Aout">6,00</span><small>mm</small></span></div>
+        <div class="t"><label>Tension</label><output id="Tout" for="A">13,8<small>N</small></output><span class="sub" id="Tsub">1,40 kgf</span></div>
+      </div>
+      <input id="A" type="range" min="4.5" max="6.7" step="0.01" value="6.00" aria-label="Lecture du Belter en millimètres">
+      <p class="note">T = (0,406 + 0,1226·A) · 59,75 / (4 · (7,24 − A)). Tige horizontale, embout en place.</p>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="hl"><b>±6 %</b><span>précision validée de 6 à 29 N</span></div>
+    <div><b>120</b><span>lectures d'étalonnage du ressort, en montée et en descente</span></div>
+    <div><b>6</b><span>masses de contrôle, de 648 à 2916 g</span></div>
+    <div><b>+22 à +52 %</b><span>d'erreur de la formule constructeur sur la même courroie</span></div>
+  </div>
+
+  <section id="modele">
+    <div class="split">
+      <div>
+        <p class="eyebrow">Le modèle</p>
+        <h2 class="title">Trois points d'appui, un ressort étalonné, zéro paramètre ajusté.</h2>
+        <p class="lede">Le Belter pose deux appuis sur le dos de la courroie et pousse une tige au milieu du brin. La tension équilibre la force de la tige. Tout se déduit de grandeurs mesurées.</p>
+        <div class="formula">
+          <div class="big">T = F · L / (4 · δ)</div>
+          <div class="muted">F = 0,406 + 0,1226 · A &nbsp;&nbsp;force de la tige (N)</div>
+          <div class="muted">δ = 5,84 + e − A &nbsp;&nbsp;flèche de la courroie (mm)</div>
+          <div class="muted">L = 59,75 mm &nbsp;&nbsp;entraxe des appuis</div>
+        </div>
+        <ol class="steps">
+          <li><div><b>Étalonner le ressort</b><span>Deux campagnes de masses suspendues : k = 0,1235 N/mm à ±1,1 %, précharge 42 g, frottement 0,3 g.</span></div></li>
+          <li><div><b>Mesurer la géométrie</b><span>Entraxe des vis 59,75 mm, lecture de référence 5,84 mm sur la pièce de calibration, épaisseur de courroie 1,40 mm.</span></div></li>
+          <li><div><b>Valider sur une vraie courroie</b><span>Brin GT2 chargé par 6 masses connues : le modèle retrouve chaque tension à ±6 %.</span></div></li>
+        </ol>
+      </div>
+      <div>
+        <figure class="fig"><a href="figures/ressort/fig16.png"><img src="figures/ressort/fig16.png" alt="Schéma du tensiomètre à trois points : deux appuis, la tige au milieu, la flèche δ et la tension T." loading="lazy"></a><figcaption>Principe de la mesure en trois points.</figcaption></figure>
+        <figure class="fig"><a href="figures/ressort/fig08.png"><img src="figures/ressort/fig08.png" alt="Loi d'étalonnage du Belter : force en fonction de la valeur affichée." loading="lazy"></a><figcaption>Étalonnage : F = 0,337 + 0,1226·A, R² = 0,9986.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="validation">
+    <p class="eyebrow">Validation</p>
+    <h2 class="title">Contrôlé par masses suspendues, pas par une autre formule.</h2>
+    <p class="lede">Un brin de 48 cm pend verticalement avec une masse connue : sa tension vaut exactement m·g. On compare la lecture convertie par le modèle et par la formule empirique fournie par BIQU.</p>
+    <div class="split">
+      <figure class="fig"><a href="figures/ressort/fig17.png"><img src="figures/ressort/fig17.png" alt="Tension en fonction de la lecture : mesures, modèle physique et formule BIQU." loading="lazy"></a><figcaption>Mesures (cercles), modèle (trait plein) et formule BIQU (pointillés rouges).</figcaption></figure>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Masse</th><th>T réelle</th><th>Lecture</th><th>Modèle</th><th>BIQU</th></tr></thead>
+          <tbody>
+            <tr><td class="num">648 g</td><td class="num">6,36 N</td><td class="num">4,97 mm</td><td class="num"><span class="delta-good">+5 %</span></td><td class="num"><span class="delta-bad">+35 %</span></td></tr>
+            <tr><td class="num">939 g</td><td class="num">9,21 N</td><td class="num">5,42 mm</td><td class="num"><span class="delta-good">−5 %</span></td><td class="num"><span class="delta-bad">+22 %</span></td></tr>
+            <tr><td class="num">1790 g</td><td class="num">17,56 N</td><td class="num">6,19 mm</td><td class="num"><span class="delta-good">−6 %</span></td><td class="num"><span class="delta-bad">+26 %</span></td></tr>
+            <tr><td class="num">2071 g</td><td class="num">20,32 N</td><td class="num">6,35 mm</td><td class="num"><span class="delta-good">−3 %</span></td><td class="num"><span class="delta-bad">+33 %</span></td></tr>
+            <tr><td class="num">2585 g</td><td class="num">25,36 N</td><td class="num">6,53 mm</td><td class="num"><span class="delta-good">0 %</span></td><td class="num"><span class="delta-bad">+40 %</span></td></tr>
+            <tr><td class="num">2916 g</td><td class="num">28,61 N</td><td class="num">6,63 mm</td><td class="num"><span class="delta-good">+5 %</span></td><td class="num"><span class="delta-bad">+52 %</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="outil">
+    <div class="tool-card">
+      <div>
+        <p class="eyebrow">Le calculateur</p>
+        <h2 class="title">De la lecture au quart de tour.</h2>
+        <p>Une page web autonome, sans installation, qui fonctionne aussi sur téléphone à côté de la machine. Les réglages sont préremplis avec l'étalonnage et mémorisés dans le navigateur.</p>
+        <a class="btn btn-primary" href="outil/">Ouvrir le calculateur →</a>
+      </div>
+      <ul class="feat">
+        <li><b>Tension en direct</b>N, kgf et lbf, avec la zone de validité et la sensibilité par 0,01 mm.</li>
+        <li><b>Conseil de réglage</b>Sens et nombre de tours de la vis du tendeur pour atteindre 87 Hz (CoreXY) ou 84 Hz (hybride).</li>
+        <li><b>Rat Rig V-Core 4.1</b>Mono-tête ou IDEX, tailles 300 à 500, courroies upper, lower et Y hybrides.</li>
+        <li><b>Comparer deux courroies</b>Écart gauche/droite en pourcentage et conseil pour chacune.</li>
+        <li><b>Étalonner le quart de tour</b>Deux lectures avant/après suffisent pour mesurer l'effet réel sur ta machine.</li>
+        <li><b>Autres courroies</b>GT2 6, 10, 12 mm ou paramètres libres (épaisseur, masse linéique).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="comparaison">
+    <p class="eyebrow">Belter ou macro de résonance ?</p>
+    <h2 class="title">Deux mesures qui ne répondent pas à la même question.</h2>
+    <p class="lede">Sur une Rat Rig V-Core 4.1 sous RatOS, la macro <code>MEASURE_COREXY_BELT_TENSION</code> fait osciller la tête sur ses courroies. Le second rapport compare les deux approches, en mono-tête et en IDEX.</p>
+    <div class="vs">
+      <div>
+        <h3>Belter</h3>
+        <p class="q">« Chaque courroie est-elle à la bonne tension ? »</p>
+        <ul>
+          <li>Résultat absolu, en newtons, comparable d'une machine à l'autre</li>
+          <li>Quelques secondes par brin, sans électronique</li>
+          <li>Ne voit pas la dynamique de la machine</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Macro de résonance</h3>
+        <p class="q">« La machine se comporte-t-elle de façon symétrique ? »</p>
+        <ul>
+          <li>Voit tout le système : tension, équerrage, jeu, frottements</li>
+          <li>Résultat relatif : compare deux côtés entre eux</li>
+          <li>Peu sensible au niveau de tension lui-même</li>
+        </ul>
+      </div>
+    </div>
+    <div class="figrow">
+      <figure class="fig"><a href="figures/courroies/fig07.png"><img src="figures/courroies/fig07.png" alt="Macro de résonance, axe X, têtes T0 et T1 : pics superposés à 45 et 46 Hz." loading="lazy"></a><figcaption>IDEX, axe X : les courroies de T0 et T1 résonnent à 45 et 46 Hz.</figcaption></figure>
+      <figure class="fig"><a href="figures/courroies/fig05.png"><img src="figures/courroies/fig05.png" alt="Fréquence de pincement en fonction de la tension pour trois longueurs de brin." loading="lazy"></a><figcaption>Fréquence de pincement : la tension visée dépend de la longueur du brin.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="documentation">
+    <p class="eyebrow">Documentation</p>
+    <h2 class="title">Toute la démarche, mesures comprises.</h2>
+    <p class="lede">Les deux rapports techniques sont lisibles directement ici, avec leurs figures, leurs tableaux de mesures et leurs calculs d'incertitude.</p>
+    <div class="docs">
+      <a class="doc" href="rapports/ressort.html">
+        <div class="thumb"><img src="figures/ressort/fig06.png" alt="" loading="lazy"></div>
+        <div class="body">
+          <small>Rapport 1 · 17 figures</small>
+          <h3>Caractérisation du ressort du Belter</h3>
+          <p>Bilan des forces, deux campagnes d'étalonnage, modèle théorique du ressort, contrainte dans le fil, puis application à la tension de courroie et validation.</p>
+          <p class="meta">Lire le rapport →</p>
+        </div>
+      </a>
+      <a class="doc" href="rapports/courroies.html">
+        <div class="thumb"><img src="figures/courroies/fig08.png" alt="" loading="lazy"></div>
+        <div class="body">
+          <small>Rapport 2 · 8 figures</small>
+          <h3>Belter et macro de résonance</h3>
+          <p>Chemin des courroies, lien tension-fréquence, lecture des courbes de la macro en mono-tête et en IDEX, procédures de réglage recommandées.</p>
+          <p class="meta">Lire le rapport →</p>
+        </div>
+      </a>
+    </div>
+
+    <ul class="files" id="telechargements">
+      <li><a href="fichiers/Rapport_Ressort_Belter_bigtreetch.docx" download><span class="ext">DOCX</span><span>Rapport ressort<small>version Word originale</small></span></a></li>
+      <li><a href="fichiers/Rapport_Mesure_Courroies_Belter_Macro.docx" download><span class="ext">DOCX</span><span>Rapport courroies<small>version Word originale</small></span></a></li>
+      <li><a href="fichiers/Mesures_Belter.xlsx" download><span class="ext x">XLSX</span><span>Mesures brutes<small>étalonnage et ressort</small></span></a></li>
+    </ul>
+  </section>
+
+  <section id="suite">
+    <p class="eyebrow">Limites et suite</p>
+    <h2 class="title">Ce qui reste à faire.</h2>
+    <p class="lede">Le modèle est validé pour une courroie GT2 9 mm de 1,40 mm d'épaisseur, embout en place et tige horizontale. Pistes ouvertes :</p>
+    <ul class="todo">
+      <li>Refaire une série de 6 masses un autre jour pour confirmer la reproductibilité.</li>
+      <li>Mesurer les longueurs de brin des V-Core 4.1 IDEX dans la position de réglage Rat Rig.</li>
+      <li>Vérifier la masse linéique (0,0126 kg/m) en pesant au moins 1 m de courroie.</li>
+      <li>Valider d'autres courroies : épaisseur mesurée et au moins deux points avec masses.</li>
+      <li>Clore la question de la précharge du ressort (force de décollage à la balance).</li>
+      <li>Quantifier l'effet de la tension sur la fréquence mesurée par la macro.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Tom Penfornis · Projet Polytech, 2026 · Code MIT, rapports et figures CC BY 4.0</span>
+    <span>Projet indépendant, non affilié à BigTreeTech/BIQU ni à Rat Rig.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var slider = document.getElementById('A'), svg = document.getElementById('curve');
+  var W = 400, H = 190, m = { l: 30, r: 10, t: 10, b: 26 }, A0 = 4.5, A1 = 6.7, TMAX = 35;
+  function T(a) { return (0.406 + 0.1226 * a) * 59.75 / (4 * (7.24 - a)); }
+  function X(a) { return m.l + (a - A0) / (A1 - A0) * (W - m.l - m.r); }
+  function Y(t) { return H - m.b - Math.min(t, TMAX) / TMAX * (H - m.t - m.b); }
+  var pts = [[4.97, 6.357], [5.417, 9.212], [6.19, 17.56], [6.347, 20.317], [6.527, 25.359], [6.633, 28.606]];
+  var base = '';
+  for (var t = 0; t <= TMAX; t += 10) base += '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + Y(t) + '" y2="' + Y(t) + '" stroke="var(--rule)"/><text x="' + (m.l - 6) + '" y="' + (Y(t) + 4) + '" text-anchor="end" font-size="10" fill="var(--muted)">' + t + '</text>';
+  for (var a = 5; a <= 6.5; a += 0.5) base += '<text x="' + X(a) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10" fill="var(--muted)">' + a.toFixed(1).replace('.', ',') + '</text>';
+  base += '<rect x="' + X(4.97) + '" y="' + m.t + '" width="' + (X(6.633) - X(4.97)) + '" height="' + (H - m.t - m.b) + '" fill="var(--accent)" opacity=".06"/>';
+  var d = '';
+  for (var i = 0; i <= 140; i++) { var aa = A0 + (A1 - A0) * i / 140; d += (i ? 'L' : 'M') + X(aa).toFixed(1) + ' ' + Y(T(aa)).toFixed(1); }
+  base += '<path d="' + d + '" fill="none" stroke="var(--ink)" stroke-width="2"/>';
+  pts.forEach(function (p) { base += '<circle cx="' + X(p[0]) + '" cy="' + Y(p[1]) + '" r="4" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.4"/>'; });
+  var fmt = function (x, n) { return x.toFixed(n).replace('.', ','); };
+  function draw() {
+    var a = parseFloat(slider.value), t = T(a);
+    svg.innerHTML = base + '<line x1="' + X(a) + '" x2="' + X(a) + '" y1="' + Y(t) + '" y2="' + (H - m.b) + '" stroke="var(--accent)" stroke-dasharray="3 3"/><circle cx="' + X(a) + '" cy="' + Y(t) + '" r="6.5" fill="var(--accent)"/>';
+    document.getElementById('Aout').textContent = fmt(a, 2);
+    document.getElementById('Tout').innerHTML = fmt(t, 1) + '<small>N</small>';
+    document.getElementById('Tsub').textContent = fmt(t / 9.81, 2) + ' kgf' + (t < 6 || t > 29 ? ' · hors zone validée' : '');
+  }
+  slider.addEventListener('input', draw);
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Fichiers de verrouillage Word / LibreOffice
+~$*
+.~lock.*#
+
+# Système
+.DS_Store
+Thumbs.db

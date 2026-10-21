@@ -108,6 +108,9 @@ summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .acts li small{display:block;font-weight:400;color:var(--soft)}
 .chart svg{display:block;width:100%;height:auto}
 .chart text{font:11px var(--font);fill:var(--soft)}
+.fig{margin:6px 0 10px}
+.fig img{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:3px}
+.fig figcaption{font-size:.88rem;color:var(--soft);margin-top:4px}
 .eq{margin:8px 0;padding-left:12px;border-left:2px solid var(--rule)}
 footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid var(--rule);padding-top:10px}
 @media (max-width:560px){
@@ -194,11 +197,13 @@ footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid v
     <div class="rows">
       <div class="row"><label for="model">Machine <button class="q" type="button" aria-expanded="false" aria-controls="hmodel" aria-label="Explication : machine">?</button></label>
         <div class="inp"><select id="model"><option value="single">V-Core 4.1 single</option><option value="idex">V-Core 4.1 IDEX</option></select></div>
-        <p class="help" id="hmodel">Les fréquences visées sont les mêmes pour les deux versions (87 Hz CoreXY, 84 Hz hybride). Seules changent la position de mesure et donc la longueur des brins.</p></div>
+        <p class="help" id="hmodel">Les fréquences visées et la position de mesure sont les mêmes pour les deux versions : 87 Hz CoreXY, 84 Hz hybride, portique à Y = 272 mm. L'IDEX se met en plus en mode COPY.</p></div>
       <div class="row"><label for="size">Taille <button class="q" type="button" aria-expanded="false" aria-controls="hsize" aria-label="Explication : taille">?</button></label>
         <div class="inp"><select id="size"><option value="300">300</option><option value="400">400</option><option value="500">500</option></select></div>
-        <p class="help" id="hsize">Pour la version single, les longueurs de brin viennent d'un calculateur de la communauté V-Core 4, en position home. Pour l'IDEX, Rat Rig ne les publie pas : mesure-les une fois par taille, elles restent enregistrées. Toute longueur modifiée est mémorisée pour ce modèle et cette taille.</p></div>
+        <p class="help" id="hsize">Rat Rig ne publie pas la longueur des brins bleus. Mesure-la une fois par machine dans la position de mesure : elle est mémorisée pour ce modèle et cette taille.</p></div>
       <p class="note" id="posnote" style="margin:4px 0 6px"></p>
+      <figure class="fig"><img src="brins_mesure.jpg" alt="Portique d'une V-Core 4 : deux brins surlignés en bleu, du joiner du portique jusqu'au tendeur avant." loading="lazy" width="1280" height="720">
+        <figcaption>En bleu, les brins sur lesquels Rat Rig mesure la fréquence, des deux côtés de la machine : du joiner du portique au tendeur avant. C'est là qu'on pince la courroie et qu'on pose le Belter, et c'est leur longueur qui se saisit comme brin de référence. Image Rat Rig.</figcaption></figure>
       <div class="row"><label for="hyb">Système hybride <button class="q" type="button" aria-expanded="false" aria-controls="hhyb" aria-label="Explication : système hybride">?</button></label>
         <div class="check"><input id="hyb" type="checkbox" checked><span>moteurs Y supplémentaires</span></div>
         <p class="help" id="hhyb">Coche si la machine a les moteurs supplémentaires qui entraînent des courroies Y à gauche et à droite. Les courroies Y apparaissent alors dans les choix.</p></div>
@@ -206,10 +211,10 @@ footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid v
         <div class="inp"><select id="which"></select></div></div>
       <div class="row"><label for="Ls">Brin de référence Rat Rig <button class="q" type="button" aria-expanded="false" aria-controls="hLs" aria-label="Explication : brin de référence">?</button></label>
         <div class="inp"><input id="Ls" type="number" step="1" placeholder="à mesurer"><em>mm</em></div>
-        <p class="help" id="hLs">Longueur du brin sur lequel Rat Rig fixe sa fréquence cible : brin 4 (joint XY → tendeur avant) pour upper et lower, pince du chariot → tendeur avant pour les courroies Y. Elle sert à passer de la tension à la fréquence, donc au nombre de tours.</p></div>
+        <p class="help" id="hLs">Longueur du brin bleu de l'image, du joiner du portique au tendeur avant, mesurée portique à Y = 272 mm. C'est sur ce brin que Rat Rig fixe 87 Hz ou 84 Hz. Elle sert à passer de la fréquence à la tension visée, et au nombre de tours. Elle fait environ 300 mm : ne saisis pas le brin long sur le côté (environ 600 mm), la tension visée serait 4 fois trop haute.</p></div>
       <div class="row" id="rowSide"><label for="Lside">Brin long sur le côté <button class="q" type="button" aria-expanded="false" aria-controls="hSide" aria-label="Explication : brin long sur le côté">?</button></label>
         <div class="inp"><input id="Lside" type="number" step="1" placeholder="à mesurer"><em>mm</em></div>
-        <p class="help" id="hSide">Brin de la courroie Y entre la poulie arrière et le tendeur avant, le long du profilé. Sa longueur ne dépend pas de la position du portique, et il a la même tension que le brin de référence, car les deux passent par la poulie du tendeur. C'est un bon endroit pour poser le Belter. Pincé, il sonne plus grave que le brin de référence : sa fréquence cible est indiquée plus bas.</p></div>
+        <p class="help" id="hSide">Brin de la courroie Y entre la poulie arrière et le tendeur avant, le long du profilé. Sa longueur ne dépend pas de la position du portique, et il a la même tension que le brin de référence, car les deux passent par la poulie du tendeur. Pincé, il sonne plus grave que le brin de référence : sa fréquence cible est indiquée plus bas. Ne le saisis jamais comme brin de référence : Rat Rig fixe les 84 Hz sur le brin bleu, pas sur celui-ci.</p></div>
       <div class="row"><label for="ft">Fréquence visée <button class="q" type="button" aria-expanded="false" aria-controls="hft" aria-label="Explication : fréquence visée">?</button></label>
         <div class="inp"><input id="ft" type="number" step="1" value="87"><em>Hz</em></div>
         <p class="help" id="hft">Rat Rig demande 87 Hz sur les courroies upper et lower (CoreXY) et 84 Hz sur les courroies Y (hybride), à ±1 Hz, gauche et droite identiques.</p></div>
@@ -243,7 +248,7 @@ footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid v
       <div><label for="AR" id="lblAR">Lecture</label><div class="inp"><input id="AR" type="number" step="0.01"><em>mm</em></div></div>
     </div>
     <ul class="acts" id="cmpacts"></ul>
-    <p class="verdict" id="cmpres">Mesure les deux courroies sur leur brin 4, en miroir, tête au même endroit.</p>
+    <p class="verdict" id="cmpres">Mesure les deux courroies sur leur brin bleu, en miroir, portique à Y = 272 mm.</p>
   </details>
 
   <details>
@@ -273,12 +278,13 @@ footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid v
   var TMAX=40;
   var $=function(id){return document.getElementById(id)};
   var ids=['A','belt','e','c','mu','orient','k','course','L','model','size','which','ft','qt','pair','AL','AR'];
-  var DEF={single:{'300':{cx:185,hy:195},'400':{cx:235,hy:245},'500':{cx:285,hy:295,side:620}},idex:{'300':{},'400':{},'500':{side:620}}};
+  var DEF={single:{'300':{},'400':{},'500':{side:620}},idex:{'300':{},'400':{},'500':{side:620}}};
+  var LSMAX=450;
   var OVR={};try{OVR=JSON.parse(localStorage.getItem('belterSpans')||'{}')||{}}catch(e){OVR={}}
   function spanKey(t){return $('model').value+'|'+$('size').value+'|'+t}
   function spanFor(t){var k=spanKey(t);if(OVR[k]>0)return OVR[k];var d=DEF[$('model').value][$('size').value][t];return d>0?d:NaN}
   function setSpan(t,v){var k=spanKey(t);if(v>0)OVR[k]=v;else delete OVR[k];try{localStorage.setItem('belterSpans',JSON.stringify(OVR))}catch(e){}}
-  var POS={single:'Position de mesure : tête en position home.',idex:'Position de mesure : home, puis portique à Y = 272 mm et mode IDEX COPY (procédure Rat Rig).'};
+  var POS={single:'Position de mesure (procédure Rat Rig) : home, portique à Y = 272 mm, puis M18.',idex:'Position de mesure (procédure Rat Rig) : home, portique à Y = 272 mm, mode IDEX COPY, puis M18.'};
   var BELTNAME={upper:'courroie upper',lower:'courroie lower',yl:'courroie Y gauche',yr:'courroie Y droite'};
   var TYPE={upper:'cx',lower:'cx',yl:'hy',yr:'hy'};
   var FT={cx:87,hy:84};
@@ -288,7 +294,8 @@ footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid v
   function ten(A,q){var dmax=q.course+q.e-q.c,d=dmax-A,F=q.F0+q.k*A;return {T:F*q.L/(4*d),d:d,F:F,dmax:dmax}}
   function readFor(T,q){var dmax=q.course+q.e-q.c;return (4*T*dmax-q.F0*q.L)/(4*T+q.k*q.L)}
   function freq(T,q){return Math.sqrt(T/q.mu)/(2*q.Ls/1000)}
-  function target(q){return (q.ft>0&&q.Ls>0&&q.mu>0)?q.mu*Math.pow(2*q.Ls/1000*q.ft,2):NaN}
+  function longSpan(L){return L>LSMAX?{ok:false,txt:'Brin de référence de '+f(L,0)+' mm : ce n\'est pas le brin bleu.',sub:'Rat Rig fixe sa fréquence sur le brin du joiner au tendeur avant, portique à Y = 272 mm (environ 300 mm). Sur le brin long, la tension visée serait plusieurs fois trop haute. Mesure le brin bleu et corrige la longueur.'}:null}
+  function target(q){return (q.ft>0&&q.Ls>0&&q.Ls<=LSMAX&&q.mu>0)?q.mu*Math.pow(2*q.Ls/1000*q.ft,2):NaN}
 
   function frac(t){var a=Math.abs(t),w=Math.floor(a+1e-9),r=Math.round((a-w)*8);if(r===8){w++;r=0}
     var F={1:'un huitième',2:'un quart',3:'trois huitièmes',4:'un demi',5:'cinq huitièmes',6:'trois quarts',7:'sept huitièmes'};
@@ -342,7 +349,7 @@ footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid v
     else{$('Tt').textContent=$('At').textContent='–'}
     $('fnow').textContent=q.Ls>0&&q.mu>0?f(freq(T,q),0)+' Hz':'–';
     sideInfo(T,q);
-    setAction(q.Ls>0?advice(T,q.Ls,q.ft,q.qt,q.mu,BELTNAME[$('which').value]):{ok:false,txt:'Tension mesurée : '+f(T,1)+' N. Pour le conseil en tours de clé, saisis la longueur du brin de référence.',sub:'Rat Rig ne publie pas cette longueur pour ce modèle : mesure-la une fois dans la position indiquée, elle sera mémorisée.'});
+    setAction(longSpan(q.Ls)||(q.Ls>0?advice(T,q.Ls,q.ft,q.qt,q.mu,BELTNAME[$('which').value]):{ok:false,txt:'Tension mesurée : '+f(T,1)+' N. Pour le conseil en tours de clé, saisis la longueur du brin bleu.',sub:'Rat Rig ne publie pas cette longueur : mesure une fois le brin bleu dans la position indiquée, elle sera mémorisée.'}));
     gauge(T,Tt,ok);compare(q);chart(q);save();
   }
   function blank(q,Tt){sideInfo(NaN,q);$('T').innerHTML='–<small>N</small>';$('Talt').innerHTML='&nbsp;';['fdelta','fF','ff','fsens','fnow'].forEach(function(i){$(i).textContent='–'});setAction(null);
@@ -362,9 +369,9 @@ footer{margin-top:36px;color:var(--soft);font-size:.85rem;border-top:1px solid v
     $('lblAL').textContent='Lecture '+(pr==='cx'?'upper':'Y gauche');$('lblAR').textContent='Lecture '+(pr==='cx'?'lower':'Y droite');
     var Ls=spanFor(pr),ft=FT[pr];
     var a=n('AL'),b=n('AR'),o=$('cmpres'),ul=$('cmpacts');ul.innerHTML='';
-    if(!(a>0)||!(b>0)){o.textContent='Mesure les deux courroies sur leur brin 4, en miroir, tête au même endroit.';o.style.color='';return}
+    if(!(a>0)||!(b>0)){o.textContent='Mesure les deux courroies sur leur brin bleu, en miroir, portique à Y = 272 mm.';o.style.color='';return}
     var Ta=ten(a,q).T,Tb=ten(b,q).T;if(!(Ta>0)||!(Tb>0)){o.textContent='Une lecture dépasse la ligne des vis : vérifie le zéro.';o.style.color='var(--bad)';return}
-    var h='';if(!(Ls>0))h='<li>Tension '+(pr==='cx'?'upper':'Y gauche')+' '+f(Ta,1)+' N, '+(pr==='cx'?'lower':'Y droite')+' '+f(Tb,1)+' N.<small>Saisis la longueur du brin de référence de ces courroies (réglage de la machine) pour obtenir le conseil en tours.</small></li>';
+    var h='',ls=longSpan(Ls);if(ls)h='<li style="color:var(--warn)">'+ls.txt+'<small>Tension '+(pr==='cx'?'upper':'Y gauche')+' '+f(Ta,1)+' N, '+(pr==='cx'?'lower':'Y droite')+' '+f(Tb,1)+' N. '+ls.sub+'</small></li>';else if(!(Ls>0))h='<li>Tension '+(pr==='cx'?'upper':'Y gauche')+' '+f(Ta,1)+' N, '+(pr==='cx'?'lower':'Y droite')+' '+f(Tb,1)+' N.<small>Saisis la longueur du brin de référence de ces courroies (réglage de la machine) pour obtenir le conseil en tours.</small></li>';
     else [[Ta,names[0]],[Tb,names[1]]].forEach(function(x){var ad=advice(x[0],Ls,ft,q.qt,q.mu,BELTNAME[x[1]]);if(ad)h+='<li style="color:'+(ad.ok?'var(--good)':'var(--ink)')+'">'+ad.txt+'<small>Tension '+f(x[0],1)+' N. '+ad.sub+'</small></li>'});
     ul.innerHTML=h;
     var dp=Math.abs(Ta-Tb)/((Ta+Tb)/2)*100;

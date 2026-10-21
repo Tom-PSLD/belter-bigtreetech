@@ -57,6 +57,8 @@ ouvre-la dans un navigateur, sur ordinateur ou sur téléphone. Aucune installat
 
 - tension en direct (N, kgf, lbf), zone de validité et sensibilité par 0,01 mm lu ;
 - conseil de réglage : sens et nombre de tours du tendeur pour viser 87 Hz (CoreXY) ou 84 Hz (hybride) ;
+- brin de mesure montré en image : du joiner du portique au tendeur avant, portique à Y = 272 mm (procédure Rat Rig),
+  avec une alerte si la longueur saisie est celle du brin long de côté (cible alors 4 fois trop haute) ;
 - Rat Rig V-Core 4.1 mono-tête ou IDEX, tailles 300 à 500, courroies upper, lower et Y hybrides ;
 - comparaison de deux courroies, étalonnage de l'effet d'un quart de tour sur la machine ;
 - autres courroies (GT2 6, 10, 12 mm) ou paramètres libres.
@@ -99,7 +101,7 @@ en mono-tête et en IDEX.
 Modèle validé pour une courroie GT2 9 mm de 1,40 mm d'épaisseur, embout imprimé en place, tige horizontale.
 
 - [ ] Refaire une série de 6 masses un autre jour (reproductibilité)
-- [ ] Mesurer les longueurs de brin des V-Core 4.1 IDEX en position de réglage Rat Rig
+- [ ] Mesurer la longueur des brins bleus (joiner → tendeur avant, Y = 272 mm) sur chaque V-Core 4.1, single et IDEX
 - [ ] Vérifier la masse linéique (0,0126 kg/m) en pesant au moins 1 m de courroie
 - [ ] Valider d'autres courroies (épaisseur + au moins deux points avec masses)
 - [ ] Clore la question de la précharge du ressort (force de décollage à la balance)

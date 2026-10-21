@@ -9,7 +9,8 @@ Tu peux les partager et les adapter, y compris à des fins commerciales, à cond
 citer l'auteur et d'indiquer si des modifications ont été faites.
 
 **Exception** : les figures `docs/figures/courroies/fig01.png` et `docs/figures/courroies/fig02.png`
-(chemin des courroies) sont des documents © Rat Rig, reproduits avec mention de la source.
-Elles ne sont pas couvertes par la licence CC BY 4.0.
+(chemin des courroies) et l'image `outil/brins_mesure.jpg` (brins de mesure, wiki Rat Rig)
+sont des documents © Rat Rig, reproduits avec mention de la source.
+Ils ne sont pas couverts par la licence CC BY 4.0.
 
 Le code (calculateur `outil/`) est sous licence MIT : voir `LICENSE`.
